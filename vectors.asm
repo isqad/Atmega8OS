@@ -1,4 +1,4 @@
-; Таблица прерываний
+; РўР°Р±Р»РёС†Р° РїСЂРµСЂС‹РІР°РЅРёР№
                 .ORG INT0addr ; External Interrupt Request 0
                 RETI
                 .ORG INT1addr ; External Interrupt Request 1

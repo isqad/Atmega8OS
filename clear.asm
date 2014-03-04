@@ -1,11 +1,11 @@
-; Очистка RAM
+; РћС‡РёСЃС‚РєР° RAM
 Clear_RAM:      LDI ZL, Low(SRAM_START)
                 LDI ZH, High(SRAM_START)
                 CLR R16
 
-Flush:          ST Z+, R16             ; Сохраняем в ячейке (адрес + 1) 0
+Flush:          ST Z+, R16             ; РЎРѕС…СЂР°РЅСЏРµРј РІ СЏС‡РµР№РєРµ (Р°РґСЂРµСЃ + 1) 0
             
-                CPI ZH, High(RAMEND+1) ; Достигли конца?
+                CPI ZH, High(RAMEND+1) ; Р”РѕСЃС‚РёРіР»Рё РєРѕРЅС†Р°?
                 BRNE Flush
                 
                 CPI ZL, Low(RAMEND+1)
@@ -13,7 +13,7 @@ Flush:          ST Z+, R16             ; Сохраняем в ячейке (адрес + 1) 0
 
                 CLR ZL
                 CLR ZH
-; Сброс регистров
+; РЎР±СЂРѕСЃ СЂРµРіРёСЃС‚СЂРѕРІ
 Clr_registers:  LDI ZL, 30
                 CLR ZH
                 DEC ZL

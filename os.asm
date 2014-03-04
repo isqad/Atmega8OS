@@ -4,11 +4,6 @@
 .def Counter = R18 ; Счетчик
 .def Temp1 = R19   ; Мусорник
 
-.MACRO UOUT
-	LDI R16, @1
-	OUT @0, R16
-.ENDMACRO
-
 ; RAM ------------------------------
 
 .DSEG
@@ -30,6 +25,12 @@ TimersPool:		.byte TimersPoolSize*3  ; 15 байт для таймерной службы
                 .include "vectors.asm"
 
                 .ORG INT_VECTORS_SIZE
+
+; Обработчики прерываний
+OutComp2Int:	TimeCop
+				RETI
+
+
 ; РљРѕРЅРµС† С‚Р°Р±Р»РёС†С‹ РїСЂРµСЂС‹РІР°РЅРёР№
 
 

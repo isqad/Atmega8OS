@@ -4,7 +4,7 @@
                 .ORG INT1addr ; External Interrupt Request 1
                 RETI
                 .ORG OC2addr  ; Timer/Counter2 Compare Match
-                RETI
+                RJMP OutComp2Int
                 .ORG OVF2addr ; Timer/Counter2 Overflow
                 RETI
                 .ORG ICP1addr ; Timer/Counter1 Capture Event

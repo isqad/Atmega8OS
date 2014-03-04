@@ -1,8 +1,22 @@
 .include "m8def.inc"
 
+.def OSREG = R17   ; Рабочий регистр системы
+.def Counter = R18 ; Счетчик
+.def Temp1 = R19   ; Мусорник
+
+.MACRO UOUT
+	LDI R16, @1
+	OUT @0, R16
+.ENDMACRO
+
 ; RAM ------------------------------
 
 .DSEG
+
+				.equ TaskQueueSize = 11 ; Размер очереди задач
+TaskQueue:		.byte TaskQueueSize		; Резервируем 11 байт для нашей очереди
+				.equ TimersPoolSize = 5	; Количество таймеров
+TimersPool:		.byte TimersPoolSize*3  ; 15 байт для таймерной службы
 
 ; FLASH ----------------------------
 
@@ -26,17 +40,76 @@ Reset:          LDI R16, Low(RAMEND)
                 LDI R16, High(RAMEND)
                 OUT SPH, R16
 
+
+
 ; Очистка RAM и регистров
-				.include "clear.asm"
+;				.include "clear.asm"
+
+; Сброс всех флагов
+
+				UOUT SREG, 0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Инициализация переферии и таймера системы
+
+
+				RCALL ClearTimers
+				RCALL ClearTaskQueue
+
+				.equ MainClock = 8000000 ; Контроллер должен быть настроен на 8Mhz
+				.equ TimerDivider = MainClock/64/1000 ; 1ms
+
+				UOUT TCCR2, 1<<CTC2|4<<CS20 ; Устанавливаем CTC и предделитель 64
+				UOUT TCNT2, 0
+
+				LDI OSREG, Low(TimerDivider)
+				OUT OCR2, OSREG
+
+				UOUT TIMSK, 1<<OCF2
 
 ; Отключаем компаратор
 				LDI R17, 1<<ACD
 				OUT ACSR, R17
-				CLR R17
-; Резрешаем прерывания
-				SEI
+
+; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ; Главный цикл
-MainLoop:		RJMP MainLoop
+; Резрешаем прерывания
+MainLoop:		SEI
+				WDR ; Гладим собаку
+				RCALL ProcessTaskQueue ; Обработка очереди задач
+				RCALL Idle             ; Простой ядра
+				RJMP MainLoop
+
+; Секция Задач
+
+Idle:			RET
+Task1:			RET
+Task2:			RET
+Task3:			RET
+Task4:			RET
+Task5:			RET
+Task6:			RET
+Task7:			RET
+Task8:			RET
+Task9:			RET
+
+
+; Ядро
+				.include "kernel.asm"
+
+; Таблица переходов
+TaskProcs:      .dw Idle
+				.dw Task1
+				.dw Task2
+				.dw Task3
+				.dw Task4
+				.dw Task5
+				.dw Task6
+				.dw Task7
+				.dw Task8
+				.dw Task9
+		
 ; EEPROM ---------------------------
 
 .ESEG

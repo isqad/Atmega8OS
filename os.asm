@@ -22,18 +22,18 @@ TimersPool:		.byte TimersPoolSize*3  ; 15 байт для таймерной службы
 
 .CSEG
 
-; Начало программы 
+; РќР°С‡Р°Р»Рѕ РїСЂРѕРіСЂР°РјРјС‹ 
                 .ORG 0x0000
                 RJMP Reset
 
-; Таблица прерываний
+; РўР°Р±Р»РёС†Р° РїСЂРµСЂС‹РІР°РЅРёР№
                 .include "vectors.asm"
 
                 .ORG INT_VECTORS_SIZE
-; Конец таблицы прерываний
+; РљРѕРЅРµС† С‚Р°Р±Р»РёС†С‹ РїСЂРµСЂС‹РІР°РЅРёР№
 
 
-; Инициализация стека
+; РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃС‚РµРєР°
 Reset:          LDI R16, Low(RAMEND)
                 OUT SPL, R16
 
@@ -41,9 +41,8 @@ Reset:          LDI R16, Low(RAMEND)
                 OUT SPH, R16
 
 
-
 ; Очистка RAM и регистров
-;				.include "clear.asm"
+				.include "clear.asm"
 
 ; Сброс всех флагов
 
@@ -66,7 +65,7 @@ Reset:          LDI R16, Low(RAMEND)
 
 				UOUT TIMSK, 1<<OCF2
 
-; Отключаем компаратор
+; РћС‚РєР»СЋС‡Р°РµРј РєРѕРјРїР°СЂР°С‚РѕСЂ
 				LDI R17, 1<<ACD
 				OUT ACSR, R17
 

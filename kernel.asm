@@ -1,3 +1,5 @@
 .include "kernel/task_queue.asm"
 .include "kernel/clear_timers.asm"
 .include "kernel/clear_queue.asm"
+.include "kernel/send_task.asm"
+.include "kernel/set_timer.asm"

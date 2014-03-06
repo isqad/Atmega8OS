@@ -2,6 +2,24 @@
 .include "kernel/macro.asm"
 
 
+; Коды символов для семисегментного индикатора
+; индикатор подключается к порту так:
+; a b c d e f g DP - сегменты
+; 7 6 5 4 3 2 1 0  - биты порта
+;
+;  a_
+; f|g|b
+;	-
+; e| |c
+;   -
+;   d 	
+
+.equ Dig0               = 0xFC
+.equ Dig1				= 0x60
+.equ Dig2				= 0x6D
+;.equ Dig3				= 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .equ TS_Idle 			= 0		; 
 .equ TS_Task1		 	= 1		; 
 .equ TS_Task2 			= 2		; 
@@ -82,8 +100,12 @@ Reset:          LDI R16, Low(RAMEND)
 				LDI R17, 1<<ACD
 				OUT ACSR, R17
 
+; Настройка портов
+				UOUT DDRB, 0xFF
+
 ; Фоновые действия
-Background:		SetTimerTask TS_Task1, 3000	
+Background:		SetTimerTask TS_Task1, 3000
+				SetTimerTask TS_Task3, 1500	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Главный цикл
@@ -103,8 +125,12 @@ Task1:			SBI PORTB, 1
 Task2:			CBI PORTB, 1
 				SetTimerTask TS_Task1, 1000
 				RET
-Task3:			RET
-Task4:			RET
+Task3:			SBI PORTB, 2
+				SetTimerTask TS_Task4, 500
+				RET
+Task4:			CBI PORTB, 2
+				SetTimerTask TS_Task3, 500
+				RET
 Task5:			RET
 Task6:			RET
 Task7:			RET

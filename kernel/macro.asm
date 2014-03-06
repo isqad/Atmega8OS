@@ -4,7 +4,7 @@
 .MACRO UOUT
 	LDI R16, @1
 	OUT @0, R16
-.ENDMACRO
+.ENDM
 
 
 ; Патруль времени
@@ -62,7 +62,7 @@ TSLabel3:   SUBI ZL, Low(-3)
 			OUT SREG, OSREG
 			POP OSREG
 			RETI
-.ENDMACRO
+.ENDM
 
 ; Запуск задачи с задержкой
 .MACRO SetTimerTask
@@ -71,10 +71,10 @@ TSLabel3:   SUBI ZL, Low(-3)
 	LDI XH, High(@1)
 
 	RCALL SetTimer
-.ENDMACRO
+.ENDM
 
 ; Запуск задачи без задержки в порядке общей очереди
 .MACRO SetTask
 	LDI OSREG, @0 ; номер задачи
 	RCALL SendTask
-.ENDMACRO
+.ENDM
